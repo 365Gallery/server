@@ -1,4 +1,4 @@
-from core.models import Image
+from .models import Image
 from rest_framework import serializers
 
 
