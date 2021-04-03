@@ -25,9 +25,15 @@ class PostViewSet(ModelViewSet):
         path = default_storage.save(
             'media/input.jpeg', ContentFile(file_obj.read()))
 
-        evaluate(["--checkpoint",'/home/byol2chae/server/model/scream.ckpt',
-               "--in-path", "/home/byol2chae/server/backend/media/input.jpeg",
-                "--out-path", "/home/byol2chae/server/backend/media/output.jpeg",
-                "--allow-different-dimensions"])
+        model = 'scream.ckpt'
+        try:
+            model = request.data['model']
+        except Exception:
+            model = 'scream.ckpt'
+
+        evaluate(["--checkpoint", "/home/byol2chae/server/model/" + model,
+                  "--in-path", "/home/byol2chae/server/backend/media/input.jpeg",
+                  "--out-path", "/home/byol2chae/server/backend/media/output.jpeg",
+                  "--allow-different-dimensions"])
 
         return Response("성공", status=200)
