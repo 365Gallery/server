@@ -6,6 +6,7 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
 from .evaluate import evaluate
+from core.utils import Res
 
 
 class PostViewSet(ModelViewSet):
@@ -16,7 +17,7 @@ class PostViewSet(ModelViewSet):
         file_obj = request.FILES.get('file')
 
         if "image" not in file_obj.content_type:
-            return Response("이미지가 아닙니다 ", status=400)
+            return Res.fail(400, "이미지가 아닙니다 ")
 
         if os.path.isfile("media/input.jpeg"):
             os.remove("media/input.jpeg")
@@ -36,4 +37,4 @@ class PostViewSet(ModelViewSet):
                   "--out-path", "/home/byol2chae/server/backend/media/output.jpeg",
                   "--allow-different-dimensions"])
 
-        return Response("성공", status=200)
+        return Res.success("성공입니다" , None)
