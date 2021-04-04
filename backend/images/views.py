@@ -1,11 +1,13 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from .serializers import ImageSerializer
-from .models import Image
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-import os
+from django.conf import settings
+from core.utils import Res
+from .models import Image
+from .serializers import ImageSerializer
 from .evaluate import evaluate
+import os
 
 
 class PostViewSet(ModelViewSet):
@@ -16,18 +18,21 @@ class PostViewSet(ModelViewSet):
         file_obj = request.FILES.get('file')
 
         if "image" not in file_obj.content_type:
-            return Response("이미지가 아닙니다 ", status=400)
+            return Res.fail(400, "이미지가 아닙니다 ")
 
-        if os.path.isfile("media/input.jpeg"):
-            os.remove("media/input.jpeg")
+        if os.path.isfile('media/input.jpeg'):
+            os.remove('media/input.jpeg')
 
         file_obj.name = "input.jpeg"
         path = default_storage.save(
-            'media/input.jpeg', ContentFile(file_obj.read()))
+            str(settings.BASE_DIR) + '/media/input.jpeg', ContentFile(file_obj.read()))
 
-        evaluate(["--checkpoint",'/home/byol2chae/server/model/scream.ckpt',
-               "--in-path", "/home/byol2chae/server/backend/media/input.jpeg",
-                "--out-path", "/home/byol2chae/server/backend/media/output.jpeg",
-                "--allow-different-dimensions"])
+        model_name = self.request.query_params.get('model', 'scream.ckpt')
+        print("[model selected : " + model_name + "]")
 
-        return Response("성공", status=200)
+        evaluate(["--checkpoint", str(settings.BASE_DIR.parents[0]) + "/model/" + model_name,
+                  "--in-path", str(settings.BASE_DIR) + "/media/input.jpeg",
+                  "--out-path", str(settings.BASE_DIR) + "/media/output.jpeg",
+                  "--allow-different-dimensions"])
+
+        return Res.success("성공입니다", None)
