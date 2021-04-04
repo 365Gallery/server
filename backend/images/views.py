@@ -7,6 +7,7 @@ from django.core.files.base import ContentFile
 import os
 from .evaluate import evaluate
 from core.utils import Res
+from django.conf import settings
 
 
 class PostViewSet(ModelViewSet):
@@ -24,14 +25,14 @@ class PostViewSet(ModelViewSet):
 
         file_obj.name = "input.jpeg"
         path = default_storage.save(
-            '/home/byol2chae/server/backend/media/input.jpeg', ContentFile(file_obj.read()))
+            str(settings.BASE_DIR) + '/media/input.jpeg', ContentFile(file_obj.read()))
 
-        model = self.request.query_params.get('model', 'scream.ckpt')
-        print("[model selected : " + model + "]")
+        model_name = self.request.query_params.get('model', 'scream.ckpt')
+        print("[model selected : " + model_name + "]")
 
-        evaluate(["--checkpoint", "/home/byol2chae/server/model/" + model,
-                  "--in-path", "/home/byol2chae/server/backend/media/input.jpeg",
-                  "--out-path", "/home/byol2chae/server/backend/media/output.jpeg",
+        evaluate(["--checkpoint", str(settings.BASE_DIR.parents[0]) + "/model/" + model_name,
+                  "--in-path", str(settings.BASE_DIR) + "/media/input.jpeg",
+                  "--out-path", str(settings.BASE_DIR) + "/media/output.jpeg",
                   "--allow-different-dimensions"])
 
         return Res.success("성공입니다" , None)
