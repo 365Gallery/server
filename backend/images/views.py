@@ -1,12 +1,13 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from .serializers import ImageSerializer
-from .models import Image
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-import os
-from .evaluate import evaluate
+from django.conf import settings
 from core.utils import Res
+from .models import Image
+from .serializers import ImageSerializer
+from .evaluate import evaluate
+import os
 
 
 class PostViewSet(ModelViewSet):
