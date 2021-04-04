@@ -19,18 +19,15 @@ class PostViewSet(ModelViewSet):
         if "image" not in file_obj.content_type:
             return Res.fail(400, "이미지가 아닙니다 ")
 
-        if os.path.isfile("media/input.jpeg"):
-            os.remove("media/input.jpeg")
+        if os.path.isfile('media/input.jpeg'):
+            os.remove('media/input.jpeg')
 
         file_obj.name = "input.jpeg"
         path = default_storage.save(
-            'media/input.jpeg', ContentFile(file_obj.read()))
+            '/home/byol2chae/server/backend/media/input.jpeg', ContentFile(file_obj.read()))
 
-        model = 'scream.ckpt'
-        try:
-            model = request.data['model']
-        except Exception:
-            model = 'scream.ckpt'
+        model = self.request.query_params.get('model', 'scream.ckpt')
+        print("[model selected : " + model + "]")
 
         evaluate(["--checkpoint", "/home/byol2chae/server/model/" + model,
                   "--in-path", "/home/byol2chae/server/backend/media/input.jpeg",
