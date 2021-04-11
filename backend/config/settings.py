@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'core.apps.CoreConfig',
     'images.apps.ImageConfig',
+    'members.apps.MemberConfig',
     'django_celery_beat',
     'django_celery_results',
 ]
@@ -146,3 +147,11 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Seoul'
+
+
+AUTH_USER_MODEL = "members.Member"
+
+DEFAULT_AUTHENTICATION_CLASSES = [
+    'rest_framework.authentication.SessionAuthentication',
+    'config.authenticate.JWTAuthentication',
+]
