@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
+import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,7 +21,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-import environ
 
 ROOT_DIR = environ.Path(__file__)
 env = environ.Env()
@@ -48,6 +49,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'core.apps.CoreConfig',
     'images.apps.ImageConfig',
+    'django_celery_beat',
+    'django_celery_results',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +62,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'config.urls'
 
@@ -130,8 +137,23 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-import os
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
+
+# Celery setting
+CELERY_ALWAYS_EAGER = True
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Seoul'
+
+AUTH_USER_MODEL = "members.Member"
+
+DEFAULT_AUTHENTICATION_CLASSES = [
+    'rest_framework.authentication.SessionAuthentication',
+    'config.authenticate.JWTAuthentication',
+]

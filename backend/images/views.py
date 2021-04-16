@@ -5,9 +5,9 @@ from .models import Image
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
-from .evaluate import evaluate
 from core.utils import Res
 from django.conf import settings
+from config.tasks import convert_image
 
 
 class PostViewSet(ModelViewSet):
@@ -15,9 +15,11 @@ class PostViewSet(ModelViewSet):
     serializer_class = ImageSerializer
 
     def create(self, request, *args, **kwargs):
-        file_obj = request.FILES.get('file')
+        file_obj = request.data.get('file')
+    
+        print(file_obj)
 
-        if "image" not in file_obj.content_type:
+        if file_obj == None or "image" not in file_obj.content_type:
             return Res.fail(400, "이미지가 아닙니다 ")
 
         if os.path.isfile('media/input.jpeg'):
@@ -30,9 +32,10 @@ class PostViewSet(ModelViewSet):
         model_name = self.request.query_params.get('model', 'scream.ckpt')
         print("[model selected : " + model_name + "]")
 
-        evaluate(["--checkpoint", str(settings.BASE_DIR.parents[0]) + "/model/" + model_name,
-                  "--in-path", str(settings.BASE_DIR) + "/media/input.jpeg",
-                  "--out-path", str(settings.BASE_DIR) + "/media/output.jpeg",
-                  "--allow-different-dimensions"])
+        is_async = self.request.query_params.get('async', 'False')
+        if is_async == 'true':
+            convert_image.delay(model_name)
+        else:
+            convert_image(model_name)
 
-        return Res.success("성공입니다" , None)
+        return Res.success("성공입니다", None)
