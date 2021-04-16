@@ -15,7 +15,9 @@ class PostViewSet(ModelViewSet):
     serializer_class = ImageSerializer
 
     def create(self, request, *args, **kwargs):
-        file_obj = request.FILES.get('file')
+        file_obj = request.data.get('file')
+    
+        print(file_obj)
 
         if file_obj == None or "image" not in file_obj.content_type:
             return Res.fail(400, "이미지가 아닙니다 ")
