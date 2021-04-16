@@ -32,6 +32,10 @@ class PostViewSet(ModelViewSet):
         model_name = self.request.query_params.get('model', 'scream.ckpt')
         print("[model selected : " + model_name + "]")
 
-        convert_image.delay(model_name)
+        is_async = self.request.query_params.get('async', 'False')
+        if is_async == 'true':
+            convert_image.delay(model_name)
+        else:
+            convert_image(model_name)
 
         return Res.success("성공입니다", None)
