@@ -4,15 +4,14 @@ from django.conf import settings
 import time
 import sys
 sys.path.insert(0, 'images/')
-from images.evaluate import evaluate
+from images.run_test import evaluate
 
 
 @shared_task
 def convert_image(model_name):
-
-    evaluate(["--checkpoint", str(settings.BASE_DIR.parents[0]) + "/model/" + model_name,
-               "--in-path", str(settings.BASE_DIR) + "/media/input.jpeg",
-               "--out-path", str(settings.BASE_DIR) + "/media/output.jpeg",
-               "--allow-different-dimensions"])
+    
+    evaluate([  "--content", str(settings.BASE_DIR) + "/media/input.jpeg",
+                "--style_model", str(settings.BASE_DIR) + "images/model/" + model_name,
+               "--output", str(settings.BASE_DIR) + "/media/output.jpeg"])
 
     print("done!")

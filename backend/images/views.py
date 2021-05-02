@@ -27,7 +27,7 @@ class PostViewSet(ModelViewSet):
         path = default_storage.save(
             str(settings.BASE_DIR) + '/media/input.jpeg', ContentFile(file_obj.read()))
 
-        model_name = self.request.query_params.get('model', 'scream.ckpt')
+        model_name = self.request.query_params.get('model', 'final.ckpt-13000')
         print("[model selected : " + model_name + "]")
 
         convert_image.delay(model_name)

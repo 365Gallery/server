@@ -6,7 +6,7 @@ import argparse
 import time
 
 """parsing and configuration"""
-def parse_args():
+def parse_args(myargs):
     desc = "Tensorflow implementation of 'Perceptual Losses for Real-Time Style Transfer and Super-Resolution'"
     parser = argparse.ArgumentParser(description=desc)
 
@@ -21,7 +21,7 @@ def parse_args():
 
     parser.add_argument('--max_size', type=int, default=None, help='The maximum width or height of input images')
 
-    return check_args(parser.parse_args())
+    return check_args(parser.parse_args(args=myargs))
 
 """checking arguments"""
 def check_args(args):
@@ -62,10 +62,12 @@ def check_args(args):
     return args
 
 """main"""
-def main():
+def evaluate(args):
+
+    print("evaluate")
 
     # parse arguments
-    args = parse_args()
+    args = parse_args(args)
     if args is None:
         exit()
 
@@ -95,4 +97,4 @@ def main():
     print('Execution time for a %d x %d image : %f msec' % (shape[0], shape[1], 1000.*float(end_time - start_time)/60))
 
 if __name__ == '__main__':
-    main()
+    evaluate()
