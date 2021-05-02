@@ -71,6 +71,8 @@ def evaluate(args):
     if args is None:
         exit()
 
+    tf.reset_default_graph()
+
     # load content image
     content_image = utils.load_image(args.content, max_size=args.max_size)
 
