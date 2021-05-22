@@ -40,19 +40,9 @@ class ImageViewSet(ModelViewSet):
 
         is_async = self.request.query_params.get('async', 'False')
         if is_async == 'true':
-            convert_image.delay(model_name)
+            convert_image.delay(model_name, isSave)
         else:
-            convert_image(model_name)
-
-        convert_image.delay(model_name)
-        if isSave == 'true' or isSave == 'True':
-            output = default_storage.open(
-                str(settings.BASE_DIR) + '/media/output.jpeg'
-            )
-            new_image = Image.objects.create(file=output)
-            new_image.src = 'http://127.0.0.1:8000/' + new_image.file.name.split('/')[-1]
-            new_image.save()
-            return Res.success("성공입니다,", None)
+            convert_image(model_name, isSave)
 
         return Res.success("성공입니다", None)
 
