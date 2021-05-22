@@ -8,10 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = Member
         fields = ('email', 'password')
         extra_kwargs = {
-<<<<<<< HEAD
-=======
             'email' : {'allow_null': False, 'required': True},
->>>>>>> 2965e11243f07544ae30fb42a00b438dc1d5eb56
             'password': {'write_only': True},
         }
 

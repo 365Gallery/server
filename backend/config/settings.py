@@ -49,9 +49,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'core.apps.CoreConfig',
     'images.apps.ImageConfig',
+    'members.apps.MemberConfig',
     'django_celery_beat',
     'django_celery_results',
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
