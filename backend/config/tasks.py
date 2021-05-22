@@ -14,4 +14,3 @@ def convert_image(model_name):
                "--in-path", str(settings.BASE_DIR) + "/media/input.jpeg",
                "--out-path", str(settings.BASE_DIR) + "/media/output.jpeg",
                "--allow-different-dimensions"])
-               
