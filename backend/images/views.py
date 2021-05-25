@@ -34,23 +34,13 @@ class ImageViewSet(ModelViewSet):
             str(settings.BASE_DIR) + '/media/input.jpeg', ContentFile(file_obj.read()))
 
         model_name = self.request.query_params.get('model', 'scream.ckpt')
-        isSave = self.request.query_params.get('save', 'False')
 
         print("[model selected : " + model_name + "]")
 
         is_async = self.request.query_params.get('async', 'False')
         if is_async == 'true':
-            convert_image.delay(model_name, isSave)
+            convert_image.delay(model_name)
         else:
-            convert_image(model_name, isSave)
+            convert_image(model_name)
 
         return Res.success("성공입니다", None)
-
-    def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
-
-    def list(self, request, *args, **kwargs):
-        return Res.success("성공입니다", super().list(request, *args, **kwargs).data)
-
-    def retrieve(self, request, *args, **kwargs):
-        return Res.success("성공입니다", super().retrieve(request, *args, **kwargs).data)

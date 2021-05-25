@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'images.apps.ImageConfig',
     'members.apps.MemberConfig',
+    'gallery.apps.GalleryConfig',
     'django_celery_beat',
     'django_celery_results',
     'corsheaders',
