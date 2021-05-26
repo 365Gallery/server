@@ -20,16 +20,18 @@ class PostViewSet(ModelViewSet):
         if file_obj == None or "image" not in file_obj.content_type:
             return Res.fail(400, "이미지가 아닙니다 ")
 
-        if os.path.isfile('media/input.jpg'):
-            os.remove('media/input.jpg')
+        if os.path.isfile('media/input.jpeg'):
+            os.remove('media/input.jpeg')
 
-        file_obj.name = "input.jpg"
+        file_obj.name = "input.jpeg"
         path = default_storage.save(
-            str(settings.BASE_DIR) + '/media/input.jpg', ContentFile(file_obj.read()))
+            str(settings.BASE_DIR) + '/media/input.jpeg', ContentFile(file_obj.read()))
 
-        model_name = self.request.query_params.get('model', 'final.ckpt-13000')
+        model_name = self.request.query_params.get('model', 'monet')
+        if model_name.endswith(".ckpt"):
+            model_name = model_name.split(".")[0]
         print("[model selected : " + model_name + "]")
 
-        convert_image.delay(model_name)
+        convert_image(model_name)
 
         return Res.success("성공입니다", None)
