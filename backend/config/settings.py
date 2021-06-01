@@ -47,13 +47,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_celery_beat',
+    'django_celery_results',
+    'corsheaders',
     'core.apps.CoreConfig',
     'images.apps.ImageConfig',
     'members.apps.MemberConfig',
     'gallery.apps.GalleryConfig',
-    'django_celery_beat',
-    'django_celery_results',
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -155,7 +155,12 @@ CELERY_TIMEZONE = 'Asia/Seoul'
 
 AUTH_USER_MODEL = "members.Member"
 
-DEFAULT_AUTHENTICATION_CLASSES = [
-    'rest_framework.authentication.SessionAuthentication',
-    'config.authenticate.JWTAuthentication',
-]
+# Django Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'config.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}

@@ -6,4 +6,5 @@ app_name = "members"
 urlpatterns = [
     path('', views.UserView.as_view()),
     path('login/', views.login),
+    path('me/', views.MeView.as_view()),
 ]
