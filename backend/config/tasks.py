@@ -12,5 +12,7 @@ from images.run_test import evaluate
 def convert_image(model_name):
     
     evaluate([  "--content", str(settings.BASE_DIR) + "/media/input.jpeg",
-                "--style_model", str(settings.BASE_DIR) + "/images/model/" + model_name + "/" + model_name + ".ckpt",
+                "--style_model", str(settings.BASE_DIR) + "/images/model/" + model_name.split(".")[0] + "/" +  model_name,
                "--output", str(settings.BASE_DIR) + "/media/output.jpeg"])
+
+    print("done!")
