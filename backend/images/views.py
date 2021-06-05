@@ -33,9 +33,7 @@ class ImageViewSet(ModelViewSet):
         path = default_storage.save(
             str(settings.BASE_DIR) + '/media/input.jpeg', ContentFile(file_obj.read()))
 
-        model_name = self.request.query_params.get('model', 'monet')
-        if model_name.endswith(".ckpt"):
-            model_name = model_name.split(".")[0]
+        model_name = self.request.query_params.get('model', 'monet.ckpt')
         print("[model selected : " + model_name + "]")
 
         convert_image(model_name)
