@@ -21,6 +21,8 @@ class CommentViewSet(ModelViewSet):
         writer = request.data.get('writer')
         text = request.data.get('text')
 
+        print(photo_pk, writer, text)
+
         new_comment = Comment.objects.create(writer=writer, text=text)
         gallery = GalleryPhoto.objects.get(pk=photo_pk)
         GalleryComment.objects.create(gallery=gallery, comment=new_comment)
@@ -38,7 +40,7 @@ class GalleryViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         file_obj = request.data.get('file')
-        tag_idx = request.data.get('tag_idx')
+        tag_idx = request.data.get('tag_idx', None)
     
         print(file_obj)
 
@@ -46,8 +48,9 @@ class GalleryViewSet(ModelViewSet):
             return Res.fail(400, "이미지가 아닙니다 ")
 
         new_object = GalleryPhoto.objects.create(file = file_obj)
-        new_object.tag = Tag.objects.get(idx=tag_idx)
-        new_object.save()
+        if tag_idx is not None:
+            new_object.tag = Tag.objects.get(idx=tag_idx)
+            new_object.save()
 
         return Res.success("성공입니다", None)
 
