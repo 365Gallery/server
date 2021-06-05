@@ -5,6 +5,7 @@ from . import views
 router = DefaultRouter()
 
 router.register('gallery', views.GalleryViewSet)
+router.register('comment', views.CommentViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

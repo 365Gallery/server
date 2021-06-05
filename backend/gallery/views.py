@@ -1,11 +1,31 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from .serializers import PhotoSerializer
-from .models import GalleryPhoto, Tag
+from .serializers import PhotoSerializer, CommentSerializer
+from .models import GalleryPhoto, Tag, Comment, GalleryComment
 from django.core.files.storage import default_storage
 import os
 from core.utils import Res
 from django.conf import settings
+
+
+class CommentViewSet(ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    class Meta:
+        model = GalleryPhoto
+        fields = '__all__'
+
+    def create(self, request, *args, **kwargs):
+        photo_pk = request.data.get('photo_pk')
+        writer = request.data.get('writer')
+        text = request.data.get('text')
+
+        new_comment = Comment.objects.create(writer=writer, text=text)
+        gallery = GalleryPhoto.objects.get(pk=photo_pk)
+        GalleryComment.objects.create(gallery=gallery, comment=new_comment)
+
+        return Res.success("성공", None)
 
 
 class GalleryViewSet(ModelViewSet):
@@ -28,7 +48,6 @@ class GalleryViewSet(ModelViewSet):
         new_object = GalleryPhoto.objects.create(file = file_obj)
         new_object.tag = Tag.objects.get(idx=tag_idx)
         new_object.save()
-        print(new_object.tag.idx)
 
         return Res.success("성공입니다", None)
 
@@ -39,3 +58,6 @@ class GalleryViewSet(ModelViewSet):
     def delete(self, request, *args, **kwargs):
         response = super().delete(request, *args, **kwargs)
         return Res.build(response.status_code, response.status_text, response.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)

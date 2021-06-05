@@ -6,6 +6,16 @@ class Tag(models.Model):
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=10)
 
+class Comment(models.Model):
+
+    writer = models.CharField(max_length=20)
+    text = models.CharField(max_length=1024)
+
+class GalleryComment(models.Model):
+
+    gallery = models.ForeignKey("gallery.GalleryPhoto", on_delete=models.DO_NOTHING, related_name="gallery")
+    comment = models.ForeignKey("gallery.Comment", on_delete=models.CASCADE, related_name="comment")
+
 class GalleryPhoto(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
