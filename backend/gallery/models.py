@@ -5,7 +5,6 @@ class Tag(models.Model):
     idx = models.IntegerField()
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=10)
-
 class Comment(models.Model):
 
     writer = models.CharField(max_length=20)
