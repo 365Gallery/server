@@ -36,6 +36,6 @@ class ImageViewSet(ModelViewSet):
         model_name = self.request.query_params.get('model', 'monet.ckpt')
         print("[model selected : " + model_name + "]")
 
-        convert_image.delay(model_name)
+        convert_image(model_name)
 
         return Res.success("성공입니다", None)
